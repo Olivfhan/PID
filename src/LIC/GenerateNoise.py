@@ -56,8 +56,8 @@ def generate_noise_image(im_gray, labels, label_counts, lambda_1=0.7, min_1=0, m
 
 
 # Cargar la imagen en escala de grises
-image_path = "Images/Abdullah_Ahmad_Badawi_0001.jpg"  # Reemplaza con la ruta de tu imagen
-im_gray = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE) / 255.0  # Normalizar a rango [0,1]
+image_path = "Images/Abdullah_Ahmad_Badawi_0001.jpg"  
+im_gray = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE) / 255.0  # Normalizar 
 
 # Generar etiquetas y conteo de regiones (simulación básica)
 H, W = im_gray.shape
