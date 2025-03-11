@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def label_regions(im, num_regions): #Directamente sacado del github (lic.py)
+def label_regions(im, num_regions): #regiones
 
     # Builds an 8-connected graph of pixels, with edge weights being the
     # l2 distance between pixel colors in whatever color space they are in.
@@ -71,7 +71,7 @@ def label_regions(im, num_regions): #Directamente sacado del github (lic.py)
     return labels, label_counts
 
 
-def generate_noise_image(im_gray, labels, label_counts, #Directamenete sacado del github (lic.py)
+def generate_noise_image(im_gray, labels, label_counts, #generación de ruido
                          lambda_1=0.7, min_1=0, max_1=255,
                          lambda_2=0.3, min_2=0, max_2=255):
     
@@ -119,16 +119,16 @@ def generate_noise_image(im_gray, labels, label_counts, #Directamenete sacado de
     return im_noise
 
 
-# Cargas de la imagen tal y como lo hacen ellos en el github (run_lic.py)
+# Cargas de la imagen según el artículo
 filepath = "Images/Abdullah_Ahmad_Badawi_0001.jpg"  
 img = cv2.imread(filepath)
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 img_lab = cv2.cvtColor(img, cv2.COLOR_RGB2LAB)
 img_gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 
-#Generar etiquetas (sacado del github)
+#Generar etiquetas 
 labels, label_counts = label_regions(img_lab, img_lab.shape[0] * img_lab.shape[1] // 8)
-#Generar ruido (sacado del github)
+#Generar ruido 
 im_noise = generate_noise_image(img_gray, labels, label_counts)
 
 # Mostrar resultado
