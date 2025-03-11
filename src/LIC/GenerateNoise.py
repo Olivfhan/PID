@@ -3,9 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-import numpy as np
-
-
 def label_regions(im, num_regions): #Directamente sacado del github (lic.py)
 
     # Builds an 8-connected graph of pixels, with edge weights being the
