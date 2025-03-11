@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Parámetros del algoritmo, se debe tener cuidado con los valores ya que un valor muy alto puede hacer que el algoritmo tarde mucho en ejecutarse
 length = 30
 dt = 0.2
 
@@ -70,7 +71,7 @@ def lic(noise, vector_field, length, dt):
 # Ejecución principal
 if __name__ == '__main__':
     # Cargar imagen de entrada (asegúrate de que la ruta sea correcta)
-    input_img = cv2.imread('Images/Abdullah_Ahmad_Badawi_0001.jpg', cv2.IMREAD_GRAYSCALE)
+    input_img = cv2.imread('Images/raw/Abdullah_Ahmad_Badawi_0001.jpg', cv2.IMREAD_GRAYSCALE)
     if input_img is None:
         raise ValueError("No se pudo cargar la imagen. Verifica la ruta.")
     
