@@ -37,11 +37,11 @@ def SobelGradient(im):
     sobelx = cv2.convertScaleAbs(sobelx)
     sobely = cv2.convertScaleAbs(sobely)
     combined = cv2.addWeighted(sobelx, 0.5, sobely, 0.5, 0)
-    res = bwareaopen(combined,100)
-    #edges = cv2.Canny(image=combined,threshold1=25,threshold2=200)
+    res = bwareaopen(combined,50)
+    edges = cv2.Canny(image=res,threshold1=25,threshold2=200)
     #magnitude = np.sqrt(sobelx**2.0+sobely**2.0)
-    #combined = cv2.dilate(combined,estructurant(3),1)
-    return res
+    edges = cv2.morphologyEx(res,cv2.MORPH_CLOSE,estructurant(3))
+    return edges
 
 def binarize(im):
     _,res = cv2.threshold(im,16,255,cv2.THRESH_BINARY_INV)
