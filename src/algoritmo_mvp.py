@@ -8,7 +8,7 @@ from etf_utils import compute_etf_field
 
 # --- Parámetros Configurables ---
 KERNEL_SIZE_ETF = 5        # Tamaño del kernel para ETF
-RESIZE_DIM = (512, 512)  # Redimensionar imagen para procesar
+RESIZE_DIM = (256, 256)  # Redimensionar imagen para procesar
 LIC_LENGTH = 30          # Longitud de la línea para LIC (afecta longitud del trazo)
 LIC_DT = 0.3             # Paso de integración para LIC
 LIC_SIGMA = 3.0          # Sigma para el kernel Gaussiano en LIC
@@ -17,17 +17,17 @@ BILATERAL_SIGMA_COLOR = 50 # Reducido para ignorar más textura fina?
 BILATERAL_SIGMA_SPACE = 50 # Reducido para suavizar menos espacialmente?
 ETF_ITERATIONS = 3       # Iteraciones para refinar ETF
 GRADIENT_THRESHOLD = 0.1 # Umbral de magnitud de gradiente para detectar zonas lisas
-DEFAULT_ORIENTATION_ANGLE = 45 # Ángulo por defecto en zonas lisas (grados)
+DEFAULT_ORIENTATION_ANGLE = 60 # Ángulo por defecto en zonas lisas (grados)
 # --- Parámetros de Canny ---
-CANNY_THRESHOLD1 = 15   # Umbral bajo para Canny (probar ajustando estos)
-CANNY_THRESHOLD2 = 45   # Umbral alto para Canny 
+CANNY_THRESHOLD1 = 20   # Umbral bajo para Canny (probar ajustando estos)
+CANNY_THRESHOLD2 = 50   # Umbral alto para Canny 
 # --- Parámetros de Composición ---
-EDGE_GRAY_VALUE = 45     # Valor de gris para los bordes (0=negro, 255=blanco)
+EDGE_GRAY_VALUE = 30     # Valor de gris para los bordes (0=negro, 255=blanco)
 PAPER_TEXTURE_WEIGHT = 0.2 # Peso de la textura de papel (0 para no usarla)
 # --- Rutas ---
-INPUT_IMAGE_PATH = "Images/raw/Chakib_Khelil_0001.jpg" # CAMBIAR por la ruta de tu imagen
+INPUT_IMAGE_PATH = "Images/raw/Angela_Lansbury_0002.jpg" # CAMBIAR por la ruta de tu imagen
 PAPER_TEXTURE_PATH = "Images/textures/textura_lapiz.jpg" # CAMBIAR si usas otra textura
-OUTPUT_IMAGE_PATH = "Output/sketch_mejorado_v4.png" # Nuevo nombre para la salida
+OUTPUT_IMAGE_PATH = "Output/sketch_mejorado_v1_Angela.png" # Nuevo nombre para la salida
 
 # --- Utilidades (generate_white_noise_proportional, enforce_default_orientation, lic_gaussian - sin cambios) ---
 def generate_white_noise_proportional(input_img_gray):
