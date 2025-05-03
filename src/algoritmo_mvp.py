@@ -19,15 +19,15 @@ ETF_ITERATIONS = 3       # Iteraciones para refinar ETF
 GRADIENT_THRESHOLD = 0.1 # Umbral de magnitud de gradiente para detectar zonas lisas
 DEFAULT_ORIENTATION_ANGLE = 60 # Ángulo por defecto en zonas lisas (grados)
 # --- Parámetros de Canny ---
-CANNY_THRESHOLD1 = 20   # Umbral bajo para Canny (probar ajustando estos)
-CANNY_THRESHOLD2 = 50   # Umbral alto para Canny 
+CANNY_THRESHOLD1 = 35   # Umbral bajo para Canny (probar ajustando estos)
+CANNY_THRESHOLD2 = 100   # Umbral alto para Canny 
 # --- Parámetros de Composición ---
-EDGE_GRAY_VALUE = 30     # Valor de gris para los bordes (0=negro, 255=blanco)
+EDGE_GRAY_VALUE = 20     # Valor de gris para los bordes (0=negro, 255=blanco)
 PAPER_TEXTURE_WEIGHT = 0.2 # Peso de la textura de papel (0 para no usarla)
 # --- Rutas ---
-INPUT_IMAGE_PATH = "Images/raw/Angela_Lansbury_0002.jpg" # CAMBIAR por la ruta de tu imagen
+INPUT_IMAGE_PATH = "Images/raw/Wendy_Kennedy_0001.jpg" # CAMBIAR por la ruta de tu imagen
 PAPER_TEXTURE_PATH = "Images/textures/textura_lapiz.jpg" # CAMBIAR si usas otra textura
-OUTPUT_IMAGE_PATH = "Output/sketch_mejorado_v1_Angela.png" # Nuevo nombre para la salida
+OUTPUT_IMAGE_PATH = "Output/Wendy_Kennedy_0001.png" # Nuevo nombre para la salida
 
 # --- Utilidades (generate_white_noise_proportional, enforce_default_orientation, lic_gaussian - sin cambios) ---
 def generate_white_noise_proportional(input_img_gray):
