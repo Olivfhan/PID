@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+from random import randint
 
 
 def estructurant(radius):
@@ -26,7 +27,7 @@ def bwareaopen(image:np.array, size:int):
 def morphologicalOpeningClosing(im):
 
     #kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(10,10))
-    kernel = estructurant(7)
+    kernel = estructurant(4)
     reconstructed = cv2.morphologyEx(im,cv2.MORPH_OPEN,kernel)
     reconstructed = cv2.morphologyEx(reconstructed,cv2.MORPH_CLOSE,kernel)
     return reconstructed
@@ -38,17 +39,67 @@ def SobelGradient(im):
     sobely = cv2.convertScaleAbs(sobely)
     combined = cv2.addWeighted(sobelx, 0.5, sobely, 0.5, 0)
     res = bwareaopen(combined,50)
-    edges = cv2.Canny(image=res,threshold1=25,threshold2=200)
-    #magnitude = np.sqrt(sobelx**2.0+sobely**2.0)
-    edges = cv2.morphologyEx(res,cv2.MORPH_CLOSE,estructurant(3))
-    return edges
+    #edges = cv2.Canny(image=res,threshold1=25,threshold2=200)
+    magnitude = np.sqrt(sobelx**2.0+sobely**2.0)
+    edges = cv2.morphologyEx(magnitude,cv2.MORPH_CLOSE,estructurant(2))
+    return edges.astype(np.uint8)
 
 def binarize(im):
     _,res = cv2.threshold(im,16,255,cv2.THRESH_BINARY_INV)
+    #res = cv2.erode(res,estructurant(2),iterations=1)
+    #res = cv2.dilate(res,estructurant(5),iterations=1)
     return res
 
+def findNearest(arr,i,j,obj):
+    mi = len(arr)-1
+    mj = len(arr[0])-1
+    r = 1
+    ci = randint(i-1,i+1)
+    cj = randint(j-1,j+1)
+    while True:
+        if not (ci<0 or ci>mi or cj<0 or cj>mj):
+            if arr[ci][cj]!=obj:
+                return arr[ci][cj]
+
+        if ci==i+r:
+            if cj==j+r:
+                ci-=1
+            else:
+                cj+=1
+        elif ci==i-r:
+            if cj==j-r:
+                ci+=1
+            else:
+                cj-=1
+        else:
+            if cj==j-r:
+                ci+=1
+            else:
+                ci-=1
+                    
+                if ci==i-r:
+                    r+=1
+                    ci-=1
+                    cj-=1
+ 
 def getRegions(im):
+    for i in range(len(im)):
+        for j in range(len(im[0])):
+            if im[i][j]!=255:
+                i_white = i
+                j_white = j
+                break
+
     _,markers = cv2.connectedComponents(im)
+
+    region = markers[i][j]
+    markers_copy = np.array(markers)
+    for i in range(len(markers)):
+        for j in range(len(markers[0])):
+            if markers[i][j]==region:
+                markers[i][j] = findNearest(markers_copy,i,j,region)
+
+
     return markers
 
 def averageRegions(im,markers):
@@ -78,9 +129,7 @@ def averageRegions(im,markers):
     im = cv2.cvtColor(im,cv2.COLOR_LAB2BGR)
     return im
 
-def colorGeneration():
-    im = cv2.imread('../../Images/raw/Angela_Lansbury_0002.jpg',cv2.IMREAD_GRAYSCALE)
-    im_color = cv2.imread('../../Images/raw/Angela_Lansbury_0002.jpg',cv2.IMREAD_UNCHANGED)
+def colorGeneration(im_color,im):
     im2 = morphologicalOpeningClosing(im)
     im3 = SobelGradient(im2)
     im4 = binarize(im3)
@@ -123,6 +172,18 @@ def colorGeneration():
 
 
     plt.show()
+
+    return im6
     
 if __name__=="__main__":
-    colorGeneration()
+
+    INPUT_IMAGE_PATH = "../../Images/raw/Angela_Lansbury_0002.jpg" # CAMBIAR por la ruta de tu imagen
+    #Abdullah_Ahmad_Badawi_0001.jpg
+    #Chakib_Khelil_0001.jpg
+    #Angela_Lansbury_0002.jpg
+    input_image_color = cv2.imread(INPUT_IMAGE_PATH)
+    if input_image_color is None:
+        raise FileNotFoundError(f"No se pudo cargar la imagen: {INPUT_IMAGE_PATH}")
+    input_image_color = cv2.resize(input_image_color, (512,512))
+    input_image_gray = cv2.cvtColor(input_image_color, cv2.COLOR_BGR2GRAY)
+    colorGeneration(input_image_color,input_image_gray)

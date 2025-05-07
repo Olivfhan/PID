@@ -5,10 +5,11 @@ import matplotlib.pyplot as plt
 # from skimage.segmentation import felzenszwalb # Ya no se usa activamente
 # Asegúrate de que etf_utils.py está en el mismo directorio o en el PYTHONPATH
 from etf_utils import compute_etf_field 
+from colorGeneration.colorGeneration import colorGeneration
 
 # --- Parámetros Configurables ---
 KERNEL_SIZE_ETF = 5        # Tamaño del kernel para ETF
-RESIZE_DIM = (256, 256)  # Redimensionar imagen para procesar
+RESIZE_DIM = (512, 512)  # Redimensionar imagen para procesar
 LIC_LENGTH = 30          # Longitud de la línea para LIC (afecta longitud del trazo)
 LIC_DT = 0.3             # Paso de integración para LIC
 LIC_SIGMA = 3.0          # Sigma para el kernel Gaussiano en LIC
@@ -203,19 +204,30 @@ else:
 
 # Convertir resultado final a uint8
 final_drawing = np.clip(final_drawing_float * 255, 0, 255).astype(np.uint8)
+coloured = colorGeneration(input_image_color,input_image_gray)
+final_image = coloured.copy()
+for i in range(len(final_image)):
+    for j in range(len(final_image[0])):
+        if edges_canny[i][j]>0:
+            final_image[i][j]=[96,96,96]
+            continue
+        div = min(final_drawing[i][j]/192,1)
+        final_image[i][j][0]*=div
+        final_image[i][j][1]*=div
+        final_image[i][j][2]*=div
 
 print(f"Guardando resultado en {OUTPUT_IMAGE_PATH}...")
-cv2.imwrite(OUTPUT_IMAGE_PATH, final_drawing)
+cv2.imwrite(OUTPUT_IMAGE_PATH, final_image)
 
 # --- Mostrar resultados intermedios ---
 print("Mostrando resultados...")
-fig, axes = plt.subplots(2, 4, figsize=(16, 8))
+fig, axes = plt.subplots(3, 4, figsize=(12, 12))
 axes = axes.flatten()
 
 titles = [
-    "a) Imagen Original", "b) Preprocesada (Bilateral)", "c) Bordes (Canny)", 
-    "d) Bordes Grises (Comp.)", "e) Ruido Proporcional", "f) LIC Invertido", 
-    "g) LIC + Bordes Grises", "h) Dibujo Final (+Textura)"
+    "a) Imagen Original", "b) Imagen en escala de grises", "c) Preprocesada (Bilateral)", "d) Bordes (Canny)", 
+    "e) Bordes Grises (Comp.)", "f) Ruido Proporcional", "g) LIC Invertido", 
+    "h) LIC + Bordes Grises", "i) Dibujo Final (+Textura)", "j) Coloreado", "k) Imagen final"
 ]
 
 # Visualización del campo vectorial (igual que antes)
@@ -228,22 +240,30 @@ hsv = cv2.cvtColor(np.stack([hue*179, saturation*255, value*255], axis=-1).astyp
 
 images = [
     cv2.cvtColor(input_image_color, cv2.COLOR_BGR2RGB), 
+    input_image_gray,
     input_blurred,
     edges_canny, # Mostrar bordes Canny (blancos sobre negro)
     gray_edges_map, # Mostrar mapa de bordes grises
     white_noise,
     lic_image_inv,
     composite_gray_edges, # Mostrar resultado antes de textura
-    final_drawing
+    final_drawing,
+    coloured,
+    final_image
 ]
 
 for ax, img, title in zip(axes, images, titles):
     if len(img.shape) == 2:
         ax.imshow(img, cmap='gray', vmin=0, vmax=255) # Asegurar rango para escala de grises
     else:
-        ax.imshow(img) 
+        if title=="a) Imagen Original":
+            ax.imshow(img) 
+        else:
+            ax.imshow(cv2.cvtColor(img,cv2.COLOR_BGR2RGB))
     ax.set_title(title)
     ax.axis('off')
+
+axes[-1].axis('off')
 
 plt.tight_layout()
 plt.show()
